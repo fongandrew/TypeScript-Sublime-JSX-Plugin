@@ -86,7 +86,8 @@ def is_typescript(view):
     except:
         return False
 
-    return view.match_selector(location, 'source.ts')
+    return view.match_selector(location, 'source.ts') or
+           view.match_selector(location, 'source.tsx')
 
 
 def is_typescript_scope(view, scope_sel):
@@ -103,7 +104,7 @@ def is_special_view(view):
     """Determine if the current view is a special view.
 
     Special views are mostly referring to panels. They are different from normal views
-    in that they cannot be the active_view of their windows, therefore their ids 
+    in that they cannot be the active_view of their windows, therefore their ids
     shouldn't be equal to the current view id.
     """
     return view is not None and view.window() and view.id() != view.window().active_view().id()
@@ -220,7 +221,7 @@ def reload_required(view):
 def check_update_view(view):
     """Check if the buffer in the view needs to be reloaded
 
-    If we have changes to the view not accounted for by change messages, 
+    If we have changes to the view not accounted for by change messages,
     send the whole buffer through a temporary file
     """
     if is_typescript(view):
@@ -231,7 +232,7 @@ def check_update_view(view):
 
 def send_replace_changes_for_regions(view, regions, insert_string):
     """
-    Given a list of regions and a (possibly zero-length) string to insert, 
+    Given a list of regions and a (possibly zero-length) string to insert,
     send the appropriate change information to the server.
     """
     if not is_typescript(view):
@@ -331,4 +332,3 @@ def last_visible_character_region(view):
     """Returns a <sublime.Region> for the last non whitespace character"""
     pos = last_non_whitespace_position(view)
     return sublime.Region(pos, pos + 1)
-
